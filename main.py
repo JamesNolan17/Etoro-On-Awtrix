@@ -6,18 +6,8 @@ import urllib.request
 from selenium import webdriver
 import requests
 import re
-
-################### Sensitive Data ###################
-stock_type = {
-    # StockName - Investment in USD, Profit (Init it to 0.0)
-    #EG: "aapl": [1000000, 0.0]
-    "cphequities": [1768.59, 0.0],
-    "aapl": [440.73, 0.0],
-}
-account_name = "JamesNolan17"
-awtrix_url = "jamesnolan.wang"
-
-################ End of Sensitive Data ################
+import time
+from data import *
 
 header = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
@@ -35,7 +25,7 @@ cmd = {
 }
 
 # path = "/Users/home/Documents/PyCharm/EtoroXAwtrix/chromedriver_mac"
-path = "/home/pi/Etoro-On-Awtrix/chromedriver_linux"
+path = "/usr/lib/chromium-browser/chromedriver"
 user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15"
 url_prefix = f"https://www.etoro.com/zh/people/{account_name}/portfolio/"
 url_awtrix = f"http://{awtrix_url}:7000/api/v3/customapp"
@@ -70,7 +60,7 @@ def get_profit(stock_type):
     stock_type = copy.deepcopy(stock_type)
     for stock_name in stock_type.keys():
         driver.get(url_prefix + stock_name)
-        time.sleep(1)
+        time.sleep(10)
         profit_text = driver.find_element_by_class_name("bottom-right-head-cell") \
             .find_element_by_class_name("hat-cell-value").find_element_by_class_name("ng-scope").text
         profit_float = float(profit_text[:-1])
@@ -93,15 +83,20 @@ def push_stock_to_awtrix(stock_type):
         "name": "Etoro",
         "ID": id_app,
         "force": True,
-        "icon": 442,
+        "icon": "etoro",
         "moveIcon": False,
-        "repeat": 5,
-        "text": text
+        "repeat": 10,
+        "text": text,
+        "color":[106,173,34]
     }
     r = requests.post(url_awtrix, json=data)
     print("send status: " + str(r.status_code))
 
 
 while True:
-    push_stock_to_awtrix(get_profit(stock_type))
-    time.sleep(60)
+    print(time.asctime( time.localtime(time.time()) ))
+    try:
+    	push_stock_to_awtrix(get_profit(stock_type))
+    	time.sleep(60)
+    except Exception as e:
+        pass
