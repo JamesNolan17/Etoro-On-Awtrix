@@ -35,7 +35,7 @@ cmd = {
 }
 
 # path = "/Users/home/Documents/PyCharm/EtoroXAwtrix/chromedriver_mac"
-path = "/home/pi/EtoroXAwtrix/chromedriver_linux"
+path = "/home/pi/Etoro-On-Awtrix/chromedriver_linux"
 user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15"
 url_prefix = f"https://www.etoro.com/zh/people/{account_name}/portfolio/"
 url_awtrix = f"http://{awtrix_url}:7000/api/v3/customapp"
